@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "SaberPRO - Banco de Preguntas (Taller 13)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "question", "value": "http://localhost:8083" },
+    { "key": "validation", "value": "http://localhost:8082" },
+    { "key": "id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Health validation-service (:8082)",
+      "request": { "method": "GET", "url": "{{validation}}/api/validaciones/health" }
+    },
+    {
+      "name": "2. GET listar preguntas (200)",
+      "request": { "method": "GET", "url": "{{question}}/api/preguntas" }
+    },
+    {
+      "name": "3. POST crear pregunta valida (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{question}}/api/preguntas",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"enunciado\": \"¿Cuál es la capital de Colombia?\",\n  \"justificacion\": \"Bogotá es la capital desde 1538\",\n  \"opciones\": [\n    { \"texto\": \"Bogotá\", \"correcta\": true },\n    { \"texto\": \"Medellín\", \"correcta\": false },\n    { \"texto\": \"Cali\", \"correcta\": false },\n    { \"texto\": \"Popayán\", \"correcta\": false }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "4. POST justificacion corta (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{question}}/api/preguntas",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"enunciado\": \"¿Cuál es la capital de Colombia?\",\n  \"justificacion\": \"corta\",\n  \"opciones\": [\n    { \"texto\": \"Bogotá\", \"correcta\": true },\n    { \"texto\": \"Medellín\", \"correcta\": false },\n    { \"texto\": \"Cali\", \"correcta\": false },\n    { \"texto\": \"Popayán\", \"correcta\": false }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "5. POST enviar a revision (202)",
+      "request": { "method": "POST", "url": "{{question}}/api/preguntas/{{id}}/enviar-revision" }
+    },
+    {
+      "name": "6. POST enviar de nuevo (400, ya no es BORRADOR)",
+      "request": { "method": "POST", "url": "{{question}}/api/preguntas/{{id}}/enviar-revision" }
+    }
+  ]
+}
